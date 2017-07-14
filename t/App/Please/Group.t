@@ -20,17 +20,12 @@ subtest 'On empty directory' => sub {
 };
 
 subtest 'On non-empty directory' => sub {
-    my $scenario = 't/scenarios/1/tasks';
+    my $scenario = 't/scenarios/1/tasks/config';
     my $group;
 
     ok($group = CLASS->new($scenario), 'new() returns an object');
     isa_ok($group, CLASS, 'group');
-
-    ok($group->get_task('work'), 'has "work" task');
-    ok($group->get_task('config/file'), 'has "config/file" task');
-
-    ok(! $group->get_task('not-work'), 'has no "not-worwork" task (! -X)');
-    ok(! $group->get_task('non-existant'), 'has no "non-existant" task (! -e)');
+    is($group->name, 'config');
 };
 
 done_testing;
