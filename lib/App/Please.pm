@@ -3,10 +3,14 @@ use v5.10;
 use strict;
 use warnings;
 
-use constant TASKS_PATH => './tasks';
+use File::Basename;
+
+use App::Please::RootFinder;
 
 my $task = shift @ARGV;
-my $task_path = TASKS_PATH . "/$task";
+my $path = dirname $0;
+my $root = App::Please::RootFinder->find_from($path);
+my $task_path = "$root/$task";
 
 if (-e $task_path && -X $task_path) {
     system($task_path, @ARGV);
