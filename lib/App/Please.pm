@@ -5,18 +5,18 @@ use warnings;
 
 use File::Basename;
 
+use App::Please::Root;
 use App::Please::RootFinder;
 
-my $task = shift @ARGV;
-my $path = dirname $0;
-my $root = App::Please::RootFinder->find_from($path);
-my $task_path = "$root/$task";
+my $task_name = shift @ARGV;
+my $root_path = App::Please::RootFinder->find_from(dirname $0);
+my $root = App::Please::Root->new($root_path);
 
-if (-e $task_path && -X $task_path) {
-    system($task_path, @ARGV);
+if (my $task = $root->get_task($task_name)) {
+    system($task->path, @ARGV);
 }
 else {
-    die "$task is not a task";
+    die "$task_name is not a task";
 }
 
 1;
