@@ -3,16 +3,20 @@ use v5.10;
 use strict;
 use warnings;
 
-use constant TASKS_PATH => './tasks';
+use File::Basename;
 
-my $task = shift @ARGV;
-my $task_path = TASKS_PATH . "/$task";
+use App::Please::Root;
+use App::Please::RootFinder;
 
-if (-e $task_path && -X $task_path) {
-    system($task_path, @ARGV);
+my $task_name = shift @ARGV;
+my $root_path = App::Please::RootFinder->find_from(dirname $0);
+my $root = App::Please::Root->new($root_path);
+
+if (my $task = $root->get_task($task_name)) {
+    system($task->path, @ARGV);
 }
 else {
-    die "$task is not a task";
+    die "$task_name is not a task";
 }
 
 1;
